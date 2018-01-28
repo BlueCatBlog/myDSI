@@ -16,11 +16,11 @@ This app needs defined environment variables to work (case sensitive):
 This app is developped with Node.js LTS, it can be found here: https://Node.js.org/en/download/
 You will need admin privileges to install it.
 
-If you use Node.js with an user account on Windows, you need to set up your PATH environment variable with:
+If you use Node.js with an user account on Windows, you may need to set up your PATH environment variable with:
 * C:\Program Files\nodejs
 * C:\Users\\[YourUserName]\AppData\Roaming\npm
 
-### MongoDB Community Edition Installation
+### MongoDB Community Edition 3.6 Installation
 This app is developped with MongoDB Community Edition, it can be found here: https://www.mongodb.com/download-center?jmp=nav#community
 
 > For more information on MongoDB Cmmunity Edition based on your OS:
@@ -85,7 +85,9 @@ Move the file to the desired destination and convert its CRLF to LF with Visual 
 
 **Install Windows Service**
 
-    "C:\Program Files\MongoDB\Server\3.6\bin\mongod.exe" --config "C:\mongodb\mongod.cfg" --install
+    & 'C:\Program Files\MongoDB\Server\3.6\bin\mongod.exe' --config 'C:\mongodb\mongodb.cfg' --install
+    Start-Service MongoDB
+    Get-Content C:\mongodb\data\log\mongodb.log -tail 2
 
 Check if MongoDB is running:
     
@@ -96,6 +98,9 @@ Check if MongoDB is running:
 > Source:
 https://docs.mongodb.com/manual/tutorial/enable-authentication/
 
+You may need to add MongoDB path to your PATHenvironment variable:
+* C:\Program Files\MongoDB\Server\3.6\bin
+
 From a command prompt, connect and create a MongoDB User Administrator:
     
     mongo --ssl --sslAllowInvalidCertificates
@@ -103,19 +108,19 @@ From a command prompt, connect and create a MongoDB User Administrator:
     db.createUser(
       {
         user: "userAdmin",
-        pwd: "userAdminPassword"
+        pwd: "userAdminPassword",
         roles: [{ role: "userAdminAnyDatabase", db: "admin"}]
       }
     )
 
 Connect with the new administrator and create an user and database for the app:
 
-    mongo -u userAdmin -p --authenticationDatabase admin
+    mongo -u userAdmin -p --authenticationDatabase admin --ssl --sslAllowInvalidCertificates
+    use mydsi
     db.createUser(
       {
         user: "userApp",
         pwd: "userAppPassword",
-        roles: [{ role: "readWrite", db: "mydsi" },
-              { role: "read", db: "mydsi"}]
+        roles: [{ role: "readWrite", db: "mydsi" }]
       }
     )
