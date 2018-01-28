@@ -10,7 +10,6 @@ const bodyParser = require('body-parser')
 
 // Mongoose config
 const mongoOpt = {
-  ssl: true,
   user: process.env.MONGO_USER,
   pass: process.env.MONGO_PWD
 }
