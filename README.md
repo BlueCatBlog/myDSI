@@ -107,6 +107,8 @@ From a command prompt, connect and create a MongoDB User Administrator:
         roles: [{ role: "userAdminAnyDatabase", db: "admin"}]
       }
     )
+    exit
+    Restart-Service MongoDB
 
 Connect with the new administrator and create an user and database for the app:
 
