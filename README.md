@@ -18,7 +18,7 @@ You will need admin privileges to install it.
 
 If you use Node.js with an user account on Windows, you need to set up your PATH environment variable with:
 * C:\Program Files\nodejs
-* C:\Users\CandelaO\AppData\Roaming\npm
+* C:\Users\[YourUserName]\AppData\Roaming\npm
 
 ### MongoDB Community Edition Installation
 This app is developped with MongoDB Community Edition, it can be found here: https://www.mongodb.com/download-center?jmp=nav#community
