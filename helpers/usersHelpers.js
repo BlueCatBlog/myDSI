@@ -26,7 +26,7 @@ exports.createUser = function (req, res) {
 
 // Read One
 exports.getUser = function (req, res) {
-  db.User.findById(req.params.UserId)
+  db.User.findById(req.params.id)
     .then(function (foundUser) {
       res.json(foundUser)
     })
@@ -37,7 +37,7 @@ exports.getUser = function (req, res) {
 
 // Update One
 exports.updateUser = function (req, res) {
-  db.User.findOneAndUpdate({_id: req.params.UserId}, req.body, {new: true})
+  db.User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
     .then(function (User) {
       res.json(User)
     })
@@ -48,7 +48,7 @@ exports.updateUser = function (req, res) {
 
 // Delete One
 exports.deleteUser = function (req, res) {
-  db.User.remove({_id: req.params.UserId})
+  db.User.remove({_id: req.params.id})
     .then(function () {
       res.json({message: 'We deleted it!'})
     })
