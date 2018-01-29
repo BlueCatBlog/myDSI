@@ -16,7 +16,9 @@ const mongoOpt = {
 mongoose.connect(process.env.MONGO_URI, mongoOpt)
   .then(
     () => {},
-    err => { console.log(err) }
+    (err) => {
+      console.log(err)
+    }
   )
 
 // App config

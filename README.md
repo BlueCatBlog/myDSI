@@ -126,3 +126,10 @@ Connect with the new administrator and create an user and database for the app:
         roles: [{ role: "readWrite", db: "mydsi" }]
       }
     )
+
+You can set .env as follow:
+
+    PORT        = 3000
+    MONGO_USER  = 'userApp'
+    MONGO_PWD   = 'userAppPassword'
+    MONGO_URI   = 'mongodb://localhost/mydsi?ssl=true&connectTimeoutMS=30000'
