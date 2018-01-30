@@ -2,20 +2,16 @@ const _ = require('lodash')
 const db = require('../models')
 
 // Read All
-exports.getUsers = function (req, res) {
+exports.getUsers = (req, res) => {
   db.User.find()
-    .then(function (Users) {
-      res.json(Users)
-    })
-    .catch(function (err) {
-      res.send(err)
-    })
+    .then(users => res.status(200).json(users))
+    .catch(err => res.status(400).json(err.message))
 }
 
 // New
-exports.createUser = function (req, res) {
+exports.createUser = (req, res) => {
   const newUser = new db.User(_.omit(req.body, 'password'))
-  db.User.register(newUser, req.body.password, function (err, createdUser) {
+  db.User.register(newUser, req.body.password, (err, createdUser) => {
     if (err) {
       res.status(400).json(err.message)
     } else {
@@ -27,34 +23,22 @@ exports.createUser = function (req, res) {
 // Read One
 exports.getUser = function (req, res) {
   db.User.findById(req.params.id)
-    .then(function (foundUser) {
-      res.json(foundUser)
-    })
-    .catch(function (err) {
-      res.send(err)
-    })
+    .then(foundUsers => res.status(200).json(foundUsers))
+    .catch(err => res.status(400).json(err.message))
 }
 
 // Update One
 exports.updateUser = function (req, res) {
   db.User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
-    .then(function (User) {
-      res.json(User)
-    })
-    .catch(function (err) {
-      res.send(err)
-    })
+    .then(updatedUser => res.status(200).json(updatedUser))
+    .catch(err => res.status(400).json(err.message))
 }
 
 // Delete One
 exports.deleteUser = function (req, res) {
   db.User.remove({_id: req.params.id})
-    .then(function () {
-      res.json({message: 'We deleted it!'})
-    })
-    .catch(function (err) {
-      res.send(err)
-    })
+    .then(updatedUser => res.sendStatus(200))
+    .catch(err => res.status(400).json(err.message))
 }
 
 module.exports = exports
