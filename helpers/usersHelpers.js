@@ -15,27 +15,46 @@ exports.createUser = (req, res) => {
     if (err) {
       res.status(400).json(err.message)
     } else {
-      res.status(201).json(createdUser)
+      res.status(201).json({id: createdUser.id, username: createdUser.username})
     }
   })
 }
 
 // Read One
-exports.getUser = function (req, res) {
+exports.getUser = (req, res) => {
   db.User.findById(req.params.id)
-    .then(foundUsers => res.status(200).json(foundUsers))
+    .then(foundUser => res.status(200).json(foundUser))
     .catch(err => res.status(400).json(err.message))
 }
 
 // Update One
-exports.updateUser = function (req, res) {
-  db.User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
+exports.updateUser = (req, res) => {
+  db.User.findOneAndUpdate({_id: req.params.id}, _.omit(req.body, 'password'), {new: true})
     .then(updatedUser => res.status(200).json(updatedUser))
     .catch(err => res.status(400).json(err.message))
 }
 
+// Update One Password
+exports.updateUserPassword = (req, res) => {
+  db.User.findById(req.params.id)
+    .then(foundUser => {
+      if (foundUser) {
+        foundUser.changePassword(req.body.oldPassword, req.body.newPassword, (err, updatedUser) => {
+          if (err) {
+            res.status(400).json(err.message)
+          } else {
+            res.sendStatus(200)
+          }
+        })
+      } else {
+        res.sendStatus(400)
+      }
+    })
+    .catch(err => res.status(400).json(err.message))
+}
+
 // Delete One
-exports.deleteUser = function (req, res) {
+exports.deleteUser = (req, res) => {
   db.User.remove({_id: req.params.id})
     .then(updatedUser => res.sendStatus(200))
     .catch(err => res.status(400).json(err.message))

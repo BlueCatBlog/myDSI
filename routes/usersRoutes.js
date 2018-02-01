@@ -12,4 +12,7 @@ router.route('/:id')
   .put(helpers.updateUser)
   .delete(helpers.deleteUser)
 
+router.route('/:id/updatepwd')
+  .put(helpers.updateUserPassword)
+
 module.exports = router
