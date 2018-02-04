@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const db = require('../models')
+const msg = require('../services/Messages')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const { config: nMailerCfg, mailTemplate } = require('../services/Mailer')
@@ -25,13 +26,13 @@ exports.createUser = (req, res) => {
 
 // Login User
 exports.loginUser = (req, res) => {
-  res.sendStatus(200)
+  res.status(200).json(msg.loginUser)
 }
 
 // Logout User
 exports.logoutUser = (req, res) => {
   req.logout()
-  res.sendStatus(200)
+  res.status(200).json(msg.logoutUser)
 }
 
 // Read One User
@@ -44,7 +45,7 @@ exports.getUser = (req, res) => {
 // Update One User
 exports.updateUser = (req, res) => {
   db.User.findOneAndUpdate({_id: req.params.id}, _.omit(req.body, 'password'))
-    .then(updatedUser => res.sendStatus(200))
+    .then(updatedUser => res.status(200).json(msg.updateUser))
     .catch(err => res.status(400).json(err.message))
 }
 
@@ -57,11 +58,11 @@ exports.changeUserPassword = (req, res) => {
           if (err) {
             res.status(400).json(err.message)
           } else {
-            res.sendStatus(200)
+            res.status(200).json(msg.changeUserPassword)
           }
         })
       } else {
-        res.sendStatus(400)
+        res.status(400).json(msg.notFoundUserId)
       }
     })
     .catch(err => res.status(400).json(err.message))
@@ -78,6 +79,8 @@ exports.forgotUserPassword = (req, res) => {
           .catch(err => res.status(422).json(err.message))
 
         return foundUser
+      } else {
+        throw res.status(400).json(msg.notFoundUserEmail)
       }
     }, err => res.status(400).json(err.message))
     .then(foundUser => {
@@ -108,7 +111,7 @@ exports.forgotUserPassword = (req, res) => {
         transporter.sendMail(mailOptions)
           .catch(err => res.status(422).json(err.message))
       }
-      res.sendStatus(200)
+      res.status(200).json(msg.forgotUserPassword)
     }, err => res.status(400).json(err.message))
     .catch(err => res.status(400).json(err.message))
 }
@@ -129,7 +132,7 @@ exports.resetUserPassword = (req, res) => {
           }
         })
       } else {
-        throw res.sendStatus(400)
+        throw res.status(400).json(msg.notFoundUserToken)
       }
       return foundUser
     }, err => res.status(400).json(err.message))
@@ -162,7 +165,7 @@ exports.resetUserPassword = (req, res) => {
         transporter.sendMail(mailOptions)
           .catch(err => res.status(422).json(err.message))
       }
-      res.sendStatus(200)
+      res.status(200).json(msg.resetUserPassword)
     }, err => res.status(400).json(err.message))
     .catch(err => res.status(400).json(err.message))
 }
@@ -170,7 +173,7 @@ exports.resetUserPassword = (req, res) => {
 // Delete One User
 exports.deleteUser = (req, res) => {
   db.User.remove({_id: req.params.id})
-    .then(updatedUser => res.sendStatus(200))
+    .then(updatedUser => res.status(200).json(msg.deleteUser))
     .catch(err => res.status(400).json(err.message))
 }
 

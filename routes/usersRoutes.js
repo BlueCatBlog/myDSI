@@ -15,12 +15,12 @@ router.route('/logout')
   .get(helpers.logoutUser)
 
 router.route('/:id')
-  .get(helpers.getUser)
-  .put(helpers.updateUser)
-  .delete(helpers.deleteUser)
+  .get(authentication.verify, helpers.getUser)
+  .put(authentication.verify, helpers.updateUser)
+  .delete(authentication.verify, helpers.deleteUser)
 
 router.route('/:id/pwd/change')
-  .patch(helpers.changeUserPassword)
+  .patch(authentication.verify, helpers.changeUserPassword)
 
 router.route('/pwd/forgot')
   .patch(helpers.forgotUserPassword)
