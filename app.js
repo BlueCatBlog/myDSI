@@ -12,6 +12,7 @@ const helmet = require('helmet')
 const RateLimit = require('express-rate-limit')
 // - Module
 const bodyParser = require('body-parser')
+const yn = require('yn')
 // - Passport
 const passport = require('passport')
 require('./services/Passport')
@@ -52,13 +53,17 @@ app.get('/', function (req, res) {
 })
 
 // App Listen
-const httpsOpt = { // https://nodejs.org/docs/latest-v8.x/api/https.html#https_https_createserver_options_requestlistener
-  // Self-Signed Certificate
-  // openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
-  key: fs.readFileSync(path.join(__dirname, 'config', 'certs', 'key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'config', 'certs', 'cert.pem'))
+if (yn(process.env.EXPRESS_HTTPS)) {
+  const httpsOpt = { // https://nodejs.org/docs/latest-v8.x/api/https.html#https_https_createserver_options_requestlistener
+    // Self-Signed Certificate
+    // openssl req -newkey rsa:2048 -new -nodes -x509 -days 3650 -keyout key.pem -out cert.pem
+    key: fs.readFileSync(path.join(__dirname, 'config', 'certs', 'key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, 'config', 'certs', 'cert.pem'))
+  }
+  https.createServer(httpsOpt, app) // http://expressjs.com/en/api.html#app.listen
+    .listen(port, function () {
+      console.log(`APP IS RUNNING ON PORT ${process.env.PORT}`)
+    })
+} else {
+  app.listen(port, () => console.log(`APP IS RUNNING ON PORT ${process.env.PORT}`))
 }
-https.createServer(httpsOpt, app) // http://expressjs.com/en/api.html#app.listen
-  .listen(port, function () {
-    console.log(`APP IS RUNNING ON PORT ${process.env.PORT}`)
-  })
