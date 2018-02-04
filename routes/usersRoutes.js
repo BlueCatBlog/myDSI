@@ -8,6 +8,9 @@ router.route('/')
   .get(authentication.verify, helpers.getUsers)
   .post(helpers.createUser)
 
+router.route('/enable/:token')
+  .patch(helpers.enableUser)
+
 router.route('/login')
   .post(authentication.login(), helpers.loginUser)
 

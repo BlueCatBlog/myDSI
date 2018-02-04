@@ -1,7 +1,6 @@
 const _ = require('lodash')
 const db = require('../models')
 const msg = require('../services/Messages')
-const passport = require('passport')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const { config: nMailerCfg, mailTemplate } = require('../services/Mailer')
@@ -20,10 +19,58 @@ exports.createUser = (req, res) => {
     if (err) {
       res.status(400).json(err.message)
     } else {
-      passport.authenticate('local')
-      res.status(201).json({id: createdUser.id, username: createdUser.username})
+      const website = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/enable/${createdUser.enableToken}`
+      // Basic information for simple email template
+      const body = {
+        hello: `Hello ${createdUser.username}`,
+        intro: `Thank you to register on our website, enable your account to start using it:`,
+        link: website,
+        action: 'Enable account',
+        complement: `If the button doesn't work, go to: <a href=${website}>${website}</a> (it will expire at ${createdUser.enableExpires})`,
+        regards: 'Best regards,',
+        signature: 'IT Team'
+      }
+
+      // create reusable transporter object using the default SMTP transport
+      const transporter = nodemailer.createTransport(nMailerCfg)
+      // setup email data with unicode symbols
+      const mailOptions = {
+        from: process.env.SMTP_FROM, // sender address
+        to: createdUser.email, // list of receivers
+        subject: 'Enable your account', // Subject line
+        html: mailTemplate(body) // html body
+      }
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions)
+        .catch(err => res.status(422).json(err.message))
+
+      res.status(201).json({id: createdUser.id, username: createdUser.username, enableToken: createdUser.enableToken})
     }
   })
+}
+
+// Enable User
+exports.enableUser = (req, res) => {
+  console.log(req.params.token)
+  db.User.findOne({enableToken: req.params.token})
+    .then(foundUser => {
+      if (foundUser) {
+        if (foundUser.enableExpires >= Date.now()) {
+          foundUser.enableToken = undefined
+          foundUser.enableExpires = undefined
+          foundUser.active = true
+          foundUser.save()
+            .catch(err => res.status(422).json(err.message))
+          res.status(200).json(msg.enableUser)
+        } else {
+          throw res.status(400).json(msg.expiredToken)
+        }
+      } else {
+        res.status(400).json(msg.notFoundUserToken)
+      }
+    }, err => res.status(400).json(err.message))
+    .catch(err => res.status(400).json(err.message))
 }
 
 // Login User
@@ -76,7 +123,7 @@ exports.forgotUserPassword = (req, res) => {
     .then(foundUser => {
       if (foundUser) {
         foundUser.resetPasswordToken = crypto.randomBytes(48).toString('hex')
-        foundUser.resetPasswordExpires = Date.now() + 3600000 // 1 hour
+        foundUser.resetPasswordExpires = Date.now() + 60 * 60 * 1000 // 1 hour
         foundUser.save()
           .catch(err => res.status(422).json(err.message))
 
@@ -103,7 +150,7 @@ exports.forgotUserPassword = (req, res) => {
         const transporter = nodemailer.createTransport(nMailerCfg)
         // setup email data with unicode symbols
         const mailOptions = {
-          from: '"myDSI" <notifications@my.dsi>', // sender address
+          from: process.env.SMTP_FROM, // sender address
           to: foundUser.email, // list of receivers
           subject: 'Forgot password', // Subject line
           html: mailTemplate(body) // html body
@@ -121,6 +168,15 @@ exports.forgotUserPassword = (req, res) => {
 // Patch Reset One User Password
 exports.resetUserPassword = (req, res) => {
   db.User.findOne({resetPasswordToken: req.params.token})
+    .then(foundUser => {
+      if (foundUser) {
+        if (foundUser.resetPasswordExpires <= Date.now()) {
+          return foundUser
+        }
+      } else {
+        throw res.status(400).json(msg.expiredToken)
+      }
+    }, err => res.status(400).json(err.message))
     .then(foundUser => {
       if (foundUser) {
         foundUser.setPassword(req.body.password, (err, updatedUser) => {

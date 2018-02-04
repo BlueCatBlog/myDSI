@@ -1,3 +1,6 @@
+exports.enableUser = {
+  message: 'User Enabled'
+}
 exports.loginUser = {
   message: 'Authentication Successful'
 }
@@ -21,6 +24,9 @@ exports.forgotUserPassword = {
 }
 exports.notFoundUserToken = {
   message: 'Requested User._token Not Found'
+}
+exports.expiredToken = {
+  message: 'Token Expired'
 }
 exports.resetUserPassword = {
   message: 'User Password Reset Successful'

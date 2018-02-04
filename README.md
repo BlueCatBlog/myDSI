@@ -12,6 +12,7 @@ This app needs defined environment variables to work (case sensitive):
 * SMTP_SECURE     = **boolean** *For Ehtereal SMTP test, put it to false*
 * SMTP_USERNAME   = **string** *Username or email address use for authentifcation for SMTP*
 * SMTP_PWD        = **string** *Password for SMTP*
+* SMTP_FROM       = **string** *Email address to identify FROM field: '"myDSI" <notifications@my.dsi>'*
 
 
 > For more information on MongoDB Connection String:
