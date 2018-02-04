@@ -30,6 +30,7 @@ store.on('error', function (error) {
   assert.ifError(error)
   assert.ok(false)
 })
+app.set('trust proxy', 1) // trust first proxy
 app.use(require('express-session')({ // https://www.npmjs.com/package/express-session
   secret: process.env.EXPRESS_SECRET,
   name: 'session',
