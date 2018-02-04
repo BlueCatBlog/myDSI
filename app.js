@@ -14,14 +14,8 @@ const RateLimit = require('express-rate-limit')
 const bodyParser = require('body-parser')
 // - Passport
 const passport = require('passport')
-const User = require('./models/User')
+require('./services/Passport')
 
-// Passport Config
-passport.use(User.createStrategy())
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
-app.use(passport.initialize())
-app.use(passport.session())
 // Express Session Config
 app.use(require('express-session')({ // https://www.npmjs.com/package/express-session
   secret: process.env.EXPRESS_SECRET,
@@ -34,6 +28,9 @@ app.use(require('express-session')({ // https://www.npmjs.com/package/express-se
 // App Config
 // - Express
 app.use(express.static(path.join(__dirname, '/public')))
+// - Passport
+app.use(passport.initialize())
+app.use(passport.session())
 // - Helmet
 app.use(helmet())
 // - BodyParser
