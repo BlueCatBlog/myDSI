@@ -1,6 +1,6 @@
 {
   "name": "mydsi",
-  "version": "0.0.5",
+  "version": "0.0.10",
   "description": "Tools for my daily operations",
   "main": "app.js",
   "scripts": {
@@ -19,7 +19,6 @@
   "bugs": {
     "url": "https://github.com/BlueCatBlog/myDSI/issues"
   },
-  "homepage": "https://github.com/BlueCatBlog/myDSI#readme",
   "devDependencies": {
     "eslint": "^4.17.0",
     "eslint-config-standard": "^11.0.0-beta.0",

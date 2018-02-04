@@ -47,6 +47,9 @@ app.use(passport.session())
 // App Routes
 app.get('/health-check', (req, res) => res.sendStatus(200))
 app.use('/api/users', require('./routes/usersRoutes'))
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+})
 
 // App Listen
 const httpsOpt = { // https://nodejs.org/docs/latest-v8.x/api/https.html#https_https_createserver_options_requestlistener
