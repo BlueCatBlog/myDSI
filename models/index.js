@@ -1,11 +1,7 @@
 const mongoose = require('mongoose')
 
 // Mongoose config
-const mongoOpt = {
-  user: process.env.MONGO_USER,
-  pass: process.env.MONGO_PWD
-}
-mongoose.connect(process.env.MONGO_URI, mongoOpt)
+mongoose.connect(process.env.MONGO_URI_FULL)
   .then(
     () => {},
     (err) => {

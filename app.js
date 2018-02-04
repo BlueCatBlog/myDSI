@@ -8,8 +8,11 @@ const port = process.env.PORT
 const fs = require('fs')
 const path = require('path')
 const https = require('https')
+const assert = require('assert')
 const helmet = require('helmet')
 const RateLimit = require('express-rate-limit')
+const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session)
 // - Module
 const bodyParser = require('body-parser')
 const yn = require('yn')
@@ -18,9 +21,19 @@ const passport = require('passport')
 require('./services/Passport')
 
 // Express Session Config
+const store = new MongoDBStore( // https://github.com/mongodb-js/connect-mongodb-session
+  {
+    uri: process.env.MONGO_URI_FULL, // test
+    collection: 'sessions'
+  })
+store.on('error', function (error) {
+  assert.ifError(error)
+  assert.ok(false)
+})
 app.use(require('express-session')({ // https://www.npmjs.com/package/express-session
   secret: process.env.EXPRESS_SECRET,
   name: 'session',
+  store: store,
   resave: false,
   saveUninitialized: false,
   cookie: { secure: true }
