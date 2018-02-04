@@ -1,6 +1,7 @@
 const _ = require('lodash')
 const db = require('../models')
 const msg = require('../services/Messages')
+const passport = require('passport')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const { config: nMailerCfg, mailTemplate } = require('../services/Mailer')
@@ -19,6 +20,7 @@ exports.createUser = (req, res) => {
     if (err) {
       res.status(400).json(err.message)
     } else {
+      passport.authenticate('local')
       res.status(201).json({id: createdUser.id, username: createdUser.username})
     }
   })
@@ -85,7 +87,7 @@ exports.forgotUserPassword = (req, res) => {
     }, err => res.status(400).json(err.message))
     .then(foundUser => {
       {
-        const website = `${process.env.REDIRECT_DOMAIN}/users/pwd/reset/${foundUser.resetPasswordToken}`
+        const website = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/pwd/reset/${foundUser.resetPasswordToken}`
         // Basic information for simple email template
         const body = {
           hello: `Hello ${foundUser.username}`,
@@ -139,7 +141,7 @@ exports.resetUserPassword = (req, res) => {
     .then(foundUser => {
       {
         console.log(foundUser)
-        const website = `${process.env.REDIRECT_DOMAIN}/users/pwd/forgot/`
+        const website = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/pwd/forgot/`
         // Basic information for simple email template
         const body = {
           hello: `Hello ${foundUser.username}`,

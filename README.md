@@ -3,9 +3,16 @@
 
 This app needs defined environment variables to work (case sensitive):
 * PORT = **number** *Node App will listen to this port*
-* MONGO_USER  = **string** *Username for MongoDB connection, no need to escape characters*
-* MONGO_PWD   = **string** *Password for MongoDB connection, no need to espace characters*
-* MONGO_URI   = **string** *MongoDB standard URI: mongodb://host1:[port1][/[][database][?options]]*
+* MONGO_URI_FULL   = **string** *MongoDB standard URI: mongodb://<dbuser>:<dbpassword>@host1:[port1][/[][database][?options]]*
+* EXPRESS_SECRET  = **string** *Express secret for the cookie*
+* EXPRESS_HTTPS   = **boolean** *To set if you want to use HTTPS or not, behind a proxy for example*
+* REDIRECT_DOMAIN = **string** *Server's URI: http://mydomain.fr*
+* SMTP_HOST       = **string** *IP or DNS to connect for SMTP purpose: smtp.ethereal.email*
+* SMTP_PORT       = **string** *SMTP port, change boolean if it's a secure port. 25 (no encryption), 465 (SSL), 587 (TLS) for Ethereal*
+* SMTP_SECURE     = **boolean** *For Ehtereal SMTP test, put it to false*
+* SMTP_USERNAME   = **string** *Username or email address use for authentifcation for SMTP*
+* SMTP_PWD        = **string** *Password for SMTP*
+
 
 > For more information on MongoDB Connection String:
 > https://docs.mongodb.com/manual/reference/connection-string/
