@@ -1,11 +1,18 @@
 const express = require('express')
 const router = express.Router()
+const { authentication } = require('../middlewares')
 const helpers = require('../helpers/usersHelpers')
 
 // Users Routes
 router.route('/')
-  .get(helpers.getUsers)
+  .get(authentication.verify, helpers.getUsers)
   .post(helpers.createUser)
+
+router.route('/login')
+  .post(authentication.login(), helpers.loginUser)
+
+router.route('/logout')
+  .get(helpers.logoutUser)
 
 router.route('/:id')
   .get(helpers.getUser)

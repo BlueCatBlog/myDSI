@@ -2,7 +2,7 @@ const _ = require('lodash')
 const db = require('../models')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
-const { config: nodemailerConfig, mailTemplate } = require('../services/Mailer')
+const { config: nMailerCfg, mailTemplate } = require('../services/Mailer')
 
 // Read All Users
 exports.getUsers = (req, res) => {
@@ -21,6 +21,17 @@ exports.createUser = (req, res) => {
       res.status(201).json({id: createdUser.id, username: createdUser.username})
     }
   })
+}
+
+// Login User
+exports.loginUser = (req, res) => {
+  res.sendStatus(200)
+}
+
+// Logout User
+exports.logoutUser = (req, res) => {
+  req.logout()
+  res.sendStatus(200)
 }
 
 // Read One User
@@ -84,7 +95,7 @@ exports.forgotUserPassword = (req, res) => {
         }
 
         // create reusable transporter object using the default SMTP transport
-        const transporter = nodemailer.createTransport(nodemailerConfig)
+        const transporter = nodemailer.createTransport(nMailerCfg)
         // setup email data with unicode symbols
         const mailOptions = {
           from: '"myDSI" <notifications@my.dsi>', // sender address
@@ -138,7 +149,7 @@ exports.resetUserPassword = (req, res) => {
         }
 
         // create reusable transporter object using the default SMTP transport
-        const transporter = nodemailer.createTransport(nodemailerConfig)
+        const transporter = nodemailer.createTransport(nMailerCfg)
         // setup email data with unicode symbols
         const mailOptions = {
           from: '"myDSI" <notifications@my.dsi>', // sender address

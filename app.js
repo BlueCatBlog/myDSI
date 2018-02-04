@@ -27,10 +27,7 @@ app.use(require('express-session')({ // https://www.npmjs.com/package/express-se
 
 // App Config
 // - Express
-app.use(express.static(path.join(__dirname, '/public')))
-// - Passport
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(express.static(path.join(__dirname, 'public')))
 // - Helmet
 app.use(helmet())
 // - BodyParser
@@ -43,6 +40,9 @@ const apiLimiter = new RateLimit({
   delayMs: 0 // disabled
 })
 app.use('/api/', apiLimiter) // only apply to requests that begin with /api/
+// - Passport
+app.use(passport.initialize())
+app.use(passport.session())
 
 // App Routes
 app.get('/health-check', (req, res) => res.sendStatus(200))
