@@ -11,6 +11,12 @@ router.route('/')
 router.route('/enable/:token')
   .patch(helpers.enableUser)
 
+router.route('/invitation')
+  .post(helpers.invitUser)
+
+router.route('/invitation/:token')
+  .put(helpers.invitEnableUser)
+
 router.route('/login')
   .post(authentication.login(), helpers.loginUser)
 

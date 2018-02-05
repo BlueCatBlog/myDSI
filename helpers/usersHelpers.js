@@ -23,7 +23,7 @@ exports.createUser = (req, res) => {
       // Basic information for simple email template
       const body = {
         hello: `Hello ${createdUser.username}`,
-        intro: `Thank you to register on our website, enable your account to start using it:`,
+        intro: `Thank you to register on ${process.env.WEBSITE_NAME} enable your account to start using it:`,
         link: website,
         action: 'Enable account',
         complement: `If the button doesn't work, go to: <a href=${website}>${website}</a> (it will expire at ${createdUser.enableExpires})`,
@@ -52,7 +52,6 @@ exports.createUser = (req, res) => {
 
 // Enable User
 exports.enableUser = (req, res) => {
-  console.log(req.params.token)
   db.User.findOne({enableToken: req.params.token})
     .then(foundUser => {
       if (foundUser) {
@@ -63,6 +62,72 @@ exports.enableUser = (req, res) => {
           foundUser.save()
             .catch(err => res.status(422).json(err.message))
           res.status(200).json(msg.enableUser)
+        } else {
+          throw res.status(400).json(msg.expiredToken)
+        }
+      } else {
+        res.status(400).json(msg.notFoundUserToken)
+      }
+    }, err => res.status(400).json(err.message))
+    .catch(err => res.status(400).json(err.message))
+}
+
+// Invitation User
+exports.invitUser = (req, res) => {
+  db.User.create({invitation: true, ...req.body})
+    .then(invitedUser => {
+      {
+        const website = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/invitation/${invitedUser.enableToken}`
+        // Basic information for simple email template
+        const body = {
+          hello: `Hello ${invitedUser.username}`,
+          intro: `You have been invited on ${process.env.WEBSITE_NAME}, just set your password and login:`,
+          link: website,
+          action: 'Set my password',
+          complement: `If the button doesn't work, go to: <a href=${website}>${website}</a> (it will expire at ${invitedUser.enableExpires})`,
+          regards: 'Best regards,',
+          signature: 'IT Team'
+        }
+
+        // create reusable transporter object using the default SMTP transport
+        const transporter = nodemailer.createTransport(nMailerCfg)
+        // setup email data with unicode symbols
+        const mailOptions = {
+          from: process.env.SMTP_FROM, // sender address
+          to: invitedUser.email, // list of receivers
+          subject: `Invitation to use ${process.env.WEBSITE_NAME}`, // Subject line
+          html: mailTemplate(body) // html body
+        }
+
+        // send mail with defined transport object
+        transporter.sendMail(mailOptions)
+          .catch(err => res.status(422).json(err.message))
+      }
+      res.status(200).json(msg.forgotUserPassword)
+    }, err => res.status(400).json(err.message))
+    .catch(err => res.status(422).json(err.message))
+}
+
+// Invitation Enable User
+exports.invitEnableUser = (req, res) => {
+  db.User.findOne({enableToken: req.params.token})
+    .then(foundUser => {
+      if (foundUser) {
+        if (foundUser.enableExpires >= Date.now()) {
+          foundUser.setPassword(req.body.password, (err, updatedUser) => {
+            if (err) {
+              res.status(400).json(err.message)
+            } else {
+              updatedUser.enableToken = undefined
+              updatedUser.enableExpires = undefined
+              updatedUser.active = true
+              updatedUser.username = req.body.username
+              updatedUser.email = req.body.email
+              updatedUser.save()
+                .catch(err => res.status(422).json(err.message))
+              res.status(200).json(msg.enableUser)
+            }
+          })
         } else {
           throw res.status(400).json(msg.expiredToken)
         }
@@ -170,28 +235,26 @@ exports.resetUserPassword = (req, res) => {
   db.User.findOne({resetPasswordToken: req.params.token})
     .then(foundUser => {
       if (foundUser) {
-        if (foundUser.resetPasswordExpires <= Date.now()) {
+        if (foundUser.resetPasswordExpires >= Date.now()) {
           return foundUser
+        } else {
+          throw res.status(400).json(msg.expiredToken)
         }
-      } else {
-        throw res.status(400).json(msg.expiredToken)
-      }
-    }, err => res.status(400).json(err.message))
-    .then(foundUser => {
-      if (foundUser) {
-        foundUser.setPassword(req.body.password, (err, updatedUser) => {
-          if (err) {
-            res.status(400).json(err.message)
-          } else {
-            updatedUser.resetPasswordToken = undefined
-            updatedUser.resetPasswordExpires = undefined
-            updatedUser.save()
-              .catch(err => res.status(422).json(err.message))
-          }
-        })
       } else {
         throw res.status(400).json(msg.notFoundUserToken)
       }
+    }, err => res.status(400).json(err.message))
+    .then(foundUser => {
+      foundUser.setPassword(req.body.password, (err, updatedUser) => {
+        if (err) {
+          res.status(400).json(err.message)
+        } else {
+          updatedUser.resetPasswordToken = undefined
+          updatedUser.resetPasswordExpires = undefined
+          updatedUser.save()
+            .catch(err => res.status(422).json(err.message))
+        }
+      })
       return foundUser
     }, err => res.status(400).json(err.message))
     .then(foundUser => {
