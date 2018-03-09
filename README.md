@@ -6,6 +6,7 @@ This app needs defined environment variables to work (case sensitive):
 * MONGO_USER  = **string** *Username for MongoDB connection, no need to escape characters*
 * MONGO_PWD   = **string** *Password for MongoDB connection, no need to espace characters*
 * MONGO_URI   = **string** *MongoDB standard URI: mongodb://host1:[port1][/[][database][?options]]*
+* EXPRESS_SECRET   = **string** *https://www.npmjs.com/package/express-session*
 
 > For more information on MongoDB Connection String:
 > https://docs.mongodb.com/manual/reference/connection-string/

@@ -29,7 +29,8 @@ exports.getUser = function (req, res) {
 
 // Update One
 exports.updateUser = function (req, res) {
-  db.User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
+  const updateUser = _.omit(req.body, 'password')
+  db.User.findOneAndUpdate({_id: req.params.id}, updateUser, {new: true})
     .then(updatedUser => res.status(200).json(updatedUser))
     .catch(err => res.status(400).json(err.message))
 }
