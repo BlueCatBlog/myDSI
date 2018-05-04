@@ -18,6 +18,7 @@ This app needs defined environment variables to work (case sensitive):
 
 
 > For more information on MongoDB Connection String:
+> https://docs.mongodb.com/manual/reference/connection-string/
 
 ## Set Dev Environment
 
