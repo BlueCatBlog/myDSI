@@ -3,8 +3,9 @@
 
 This app needs defined environment variables to work (case sensitive):
 * PORT = **number** *Node App will listen to this port*
-* MONGO_URI_FULL   = **string** *MongoDB standard URI: mongodb://<dbuser>:<dbpassword>@host1:[port1][/[][database][?options]]*
-* EXPRESS_SECRET  = **string** *Express secret for the cookie*
+* MONGO_PWD   = **string** *Password for MongoDB connection, no need to espace characters*
+* MONGO_URI   = **string** *MongoDB standard URI: mongodb://host1:[port1][/[][database][?options]]*
+* EXPRESS_SECRET   = **string** *https://www.npmjs.com/package/express-session*
 * EXPRESS_HTTPS   = **boolean** *To set if you want to use HTTPS or not, behind a proxy for example*
 * REDIRECT_DOMAIN = **string** *Server's URI: http://mydomain.fr*
 * SMTP_HOST       = **string** *IP or DNS to connect for SMTP purpose: smtp.ethereal.email*
@@ -17,7 +18,6 @@ This app needs defined environment variables to work (case sensitive):
 
 
 > For more information on MongoDB Connection String:
-> https://docs.mongodb.com/manual/reference/connection-string/
 
 ## Set Dev Environment
 
