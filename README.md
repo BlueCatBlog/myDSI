@@ -13,6 +13,7 @@ This app needs defined environment variables to work (case sensitive):
 * SMTP_USERNAME   = **string** *Username or email address use for authentifcation for SMTP*
 * SMTP_PWD        = **string** *Password for SMTP*
 * SMTP_FROM       = **string** *Email address to identify FROM field: '"myDSI" <notifications@my.dsi>'*
+* WEBSITE_NAME    = **string** *Name of your website*
 
 
 > For more information on MongoDB Connection String:
