@@ -3,18 +3,17 @@
 
 This app needs defined environment variables to work (case sensitive):
 * PORT = **number** *Node App will listen to this port*
-* MONGO_PWD   = **string** *Password for MongoDB connection, no need to espace characters*
-* MONGO_URI   = **string** *MongoDB standard URI: mongodb://host1:[port1][/[][database][?options]]*
+* MONGO_URI_FULL   = **string** *MongoDB standard URI: mongodb://[username:password@]host1[:port1][/[][database][?options]]*
 * EXPRESS_SECRET   = **string** *https://www.npmjs.com/package/express-session*
-* EXPRESS_HTTPS   = **boolean** *To set if you want to use HTTPS or not, behind a proxy for example*
-* REDIRECT_DOMAIN = **string** *Server's URI: http://mydomain.fr*
-* SMTP_HOST       = **string** *IP or DNS to connect for SMTP purpose: smtp.ethereal.email*
-* SMTP_PORT       = **string** *SMTP port, change boolean if it's a secure port. 25 (no encryption), 465 (SSL), 587 (TLS) for Ethereal*
-* SMTP_SECURE     = **boolean** *For Ehtereal SMTP test, put it to false*
-* SMTP_USERNAME   = **string** *Username or email address use for authentifcation for SMTP*
-* SMTP_PWD        = **string** *Password for SMTP*
-* SMTP_FROM       = **string** *Email address to identify FROM field: '"myDSI" <notifications@my.dsi>'*
-* WEBSITE_NAME    = **string** *Name of your website*
+* EXPRESS_HTTPS    = **boolean** *To set if you want to use HTTPS or not, behind a proxy for example*
+* REDIRECT_DOMAIN  = **string** *Server's URI: http://mydomain.fr*
+* SMTP_HOST        = **string** *IP or DNS to connect for SMTP purpose: smtp.ethereal.email*
+* SMTP_PORT        = **string** *SMTP port, change boolean if it's a secure port. 25 (no encryption), 465 (SSL), 587 (TLS) for Ethereal*
+* SMTP_SECURE      = **boolean** *For Ehtereal SMTP test, put it to false*
+* SMTP_USERNAME    = **string** *Username or email address use for authentifcation for SMTP*
+* SMTP_PWD         = **string** *Password for SMTP*
+* SMTP_FROM        = **string** *Email address to identify FROM field: '"myDSI" <notifications@my.dsi>'*
+* WEBSITE_NAME     = **string** *Name of your website*
 
 
 > For more information on MongoDB Connection String:
@@ -140,6 +139,4 @@ Connect with the new administrator and create an user and database for the app:
 You can set .env as follow:
 
     PORT        = 3000
-    MONGO_USER  = 'userApp'
-    MONGO_PWD   = 'userAppPassword'
-    MONGO_URI   = 'mongodb://localhost/mydsi?ssl=true&connectTimeoutMS=30000'
+    MONGO_URI   = 'mongodb://userApp:auserAppPassword@localhost/mydsi?ssl=true&connectTimeoutMS=30000'

@@ -76,8 +76,8 @@ if (yn(process.env.EXPRESS_HTTPS)) {
   }
   https.createServer(httpsOpt, app) // http://expressjs.com/en/api.html#app.listen
     .listen(port, function () {
-      console.log(`APP IS RUNNING ON PORT ${process.env.PORT}`)
+      console.log(`APP IS RUNNING ON PORT https://${process.env.IP}:${process.env.PORT}`)
     })
 } else {
-  app.listen(port, () => console.log(`APP IS RUNNING ON PORT ${process.env.PORT}`))
+  app.listen(port, () => console.log(`APP IS RUNNING AT http://${process.env.IP}:${process.env.PORT}`))
 }
