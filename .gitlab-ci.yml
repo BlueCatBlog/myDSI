@@ -10,8 +10,8 @@ deploy_prod:
     - apk --update upgrade
     - apk --no-cache add ca-certificates wget
     - echo "use_proxy=yes" >> ~/.wgetrc
-    - echo "TARGET_SERVER_HTTP_PROXY" >> ~/.wgetrc
-    - echo "TARGET_SERVER_HTTPS_PROXY" >> ~/.wgetrc
+    - echo $TARGET_SERVER_HTTP_PROXY >> ~/.wgetrc
+    - echo $TARGET_SERVER_HTTPS_PROXY >> ~/.wgetrc
     - wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://raw.githubusercontent.com/sgerrand/alpine-pkg-glibc/master/sgerrand.rsa.pub
     - wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.27-r0/glibc-2.27-r0.apk
     - apk add glibc-2.27-r0.apk
