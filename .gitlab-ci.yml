@@ -1,5 +1,5 @@
-# image: keymetrics/pm2:latest-jessie
-image: keymetrics/pm2:latest-alpine
+image: keymetrics/pm2:latest-jessie
+# image: keymetrics/pm2:latest-alpine
 
 stages:
   - deploy
@@ -8,12 +8,12 @@ deploy_prod:
   stage: deploy
   script:
     - echo "====== Deploy to production server ======"
-    - apk --update upgrade
-    - echo "options ndots:5" >> /etc/resolv.conf
-    - apk add git openssh bash
-    # - apt update
-    # - apt upgrade
-    # - apt install git openssh bash
+    # - apk --update upgrade
+    # - echo "options ndots:5" >> /etc/resolv.conf
+    # - apk add git openssh bash
+    - apt update
+    - apt upgrade
+    - apt install git openssh bash
     # Add target server`s secret key
     - mkdir ~/.ssh
     - echo $TARGET_SERVER_SECRET_KEY_BASE64 | base64 -d > ~/.ssh/id_rsa
