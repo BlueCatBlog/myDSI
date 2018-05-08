@@ -14,10 +14,7 @@ deploy_prod:
     - echo $TARGET_SERVER_SECRET_KEY_BASE64 | base64 -d > ~/.ssh/id_rsa
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
     - echo "Test ssh connection"
-    - cat /etc/resolv.conf
-    - cat /etc/hostname
-    - ping -c 4 devdsi.rouen.port.fr
-    - ping -c 4 vcs.rouen.port.fr
+    - ldd --version
     - ssh -o StrictHostKeyChecking=no -T "$TARGET_SERVER_USER@$TARGET_SERVER_HOST -p $TARGET_SERVER_PORT"
     # Deploy
     - echo "Setup target server directories"
