@@ -11,6 +11,7 @@ deploy_prod:
     # - apk --update upgrade
     # - echo "options ndots:5" >> /etc/resolv.conf
     # - apk add git openssh bash
+    - echo "Acquire::http::Proxy $HTTP_PROXY" >> /etc/apt/apt.conf
     - apt-get update
     - apt-get upgrade
     - apt-get install git openssh bash
@@ -19,7 +20,7 @@ deploy_prod:
     - echo $TARGET_SERVER_SECRET_KEY_BASE64 | base64 -d > ~/.ssh/id_rsa
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
     - echo "Test ssh connection"
-    - ssh -o StrictHostKeyChecking=no -T "$TARGET_SERVER_USER@$TARGET_SERVER_HOST -p $TARGET_SERVER_PORT"
+    - ssh -o StrictHostKeyChecking=no -T $TARGET_SERVER_USER@$TARGET_SERVER_HOST -p $TARGET_SERVER_PORT
     # Deploy
     - echo "Setup target server directories"
     - pm2 deploy ecosystem.config.js production setup 2>&1 || true
