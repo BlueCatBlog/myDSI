@@ -62,7 +62,3 @@ typings/
 
 # Self-Signed Certificates
 config/certs/
-
-# Deploy configuration
-.gitlab-ci.yml
-ecosystem.config.js
