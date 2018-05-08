@@ -8,7 +8,7 @@ const TARGET_SERVER_PORT = process.env.TARGET_SERVER_PORT ? process.env.TARGET_S
 const REPO = process.env.REPO
 
 // Application Environment Variable
-const TARGET_SERVER_APP_PATH = `/home/${TARGET_SERVER_USER}/app`
+const TARGET_SERVER_APP_PATH = `/home/${TARGET_SERVER_USER}/myDSI`
 
 module.exports = {
   /// / Application configuration section

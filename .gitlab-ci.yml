@@ -15,6 +15,8 @@ deploy_prod:
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
     - echo "Test ssh connection"
     - cat /etc/resolv.conf
+    - cat /etc/nsswitch.conf
+    - cat /etc/hostname
     - ssh -o StrictHostKeyChecking=no -T "$TARGET_SERVER_USER@$TARGET_SERVER_HOST -p $TARGET_SERVER_PORT"
     # Deploy
     - echo "Setup target server directories"
