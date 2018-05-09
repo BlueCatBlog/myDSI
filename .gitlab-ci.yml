@@ -3,10 +3,11 @@ image: keymetrics/pm2:latest-alpine
 stages:
   - deploy
 
-deploy_prod:
+# Job de déploiement de l'environnement de développement
+deploy_dev:
   stage: deploy
   script:
-    - echo "====== Deploy to production server ======"
+    - echo "====== Deploy to server ======"
     - apk --update upgrade
     - apk add git openssh bash
     # Add target server`s secret key
@@ -18,11 +19,11 @@ deploy_prod:
     - ssh -o StrictHostKeyChecking=no -T $TARGET_SERVER_USER@$TARGET_SERVER_HOST -p $TARGET_SERVER_PORT
     # Deploy
     - echo "Setup target server directories"
-    - pm2 deploy ecosystem.config.js production setup 2>&1 || true
+    - pm2 deploy ecosystem.config.js development setup 2>&1 || true
     - echo "make deploy"
-    - pm2 deploy ecosystem.config.js production
+    - pm2 deploy ecosystem.config.js development
   environment:
-    name: deploying
+    name: staging
+    url: $REDIRECT_DOMAIN
   only:
-  - master
   - dev
