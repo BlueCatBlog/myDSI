@@ -1,12 +1,15 @@
+# https://hub.docker.com/r/keymetrics/pm2/
 image: keymetrics/pm2:latest-alpine
 
+# Available stage
 stages:
   - deploy
 
-# Job de déploiement de l'environnement de développement
+# Job
 deploy_dev:
   stage: deploy
   script:
+    # Update server
     - echo "====== Deploy to server ======"
     - apk --update upgrade
     - apk add git openssh bash
@@ -14,12 +17,12 @@ deploy_dev:
     - mkdir ~/.ssh
     - echo $TARGET_SERVER_SECRET_KEY_BASE64 | base64 -d > ~/.ssh/id_rsa
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
-    - echo "Test ssh connection"
+    - echo "====== Test ssh connection ======"
     - ssh -o StrictHostKeyChecking=no -T $TARGET_SERVER_USER@$TARGET_SERVER_HOST -p $TARGET_SERVER_PORT
     # Deploy
-    - echo "Setup target server directories"
+    - echo "====== Setup target server directories ======"
     - pm2 deploy ecosystem.config.js development setup 2>&1 || true
-    - echo "make deploy"
+    - echo "====== make deploy ======"
     - pm2 deploy ecosystem.config.js development
   environment:
     name: staging
