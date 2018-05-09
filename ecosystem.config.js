@@ -30,7 +30,7 @@ module.exports = {
           host: TARGET_SERVER_HOST,
           port: TARGET_SERVER_PORT
         }],
-      ref: 'origin/master',
+      ref: 'origin/dev',
       repo: REPO,
       ssh_options: 'StrictHostKeyChecking=no',
       path: TARGET_SERVER_APP_PATH,
