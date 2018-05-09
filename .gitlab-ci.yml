@@ -8,7 +8,6 @@ deploy_prod:
   script:
     - echo "====== Deploy to production server ======"
     - apk --update upgrade
-    - echo "options ndots:5" >> /etc/resolv.conf
     - apk add git openssh bash
     # Add target server`s secret key
     - mkdir ~/.ssh
