@@ -33,7 +33,7 @@ module.exports = {
       ref: 'origin/dev',
       repo: REPO,
       ssh_options: 'StrictHostKeyChecking=no',
-      path: TARGET_SERVER_APP_PATH,
+      path: `${TARGET_SERVER_APP_PATH}/dev`,
       'post-deploy': 'npm install' +
         ' && npm install --prefix client' +
         ' && npm run build --prefix client' +
