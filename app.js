@@ -1,3 +1,8 @@
+console.log('ENV')
+console.log(process.env)
+console.log('MONGO_URI_FULL')
+console.log(process.env.MONGO_URI_FULL)
+
 // Environment Variable
 require('dotenv').config()
 // Requirements
@@ -19,7 +24,6 @@ const yn = require('yn')
 // - Passport
 const passport = require('passport')
 require('./services/Passport')
-console.log(process.env)
 
 // Express Session Config
 const store = new MongoDBStore( // https://github.com/mongodb-js/connect-mongodb-session
