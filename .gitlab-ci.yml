@@ -19,23 +19,10 @@ deploy_dev:
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
     - echo "====== SSH connection ======"
     - ssh -o StrictHostKeyChecking=no -T $TARGET_SERVER_USER@$TARGET_SERVER_HOST -p $TARGET_SERVER_PORT
-    # Set ENV
-    - echo "====== Set ENV ======"
-    - echo "MONGO_URI_FULL  = $MONGO_URI_FULL"  > .env
-    - echo "EXPRESS_SECRET  = $EXPRESS_SECRET"  >> .env
-    - echo "EXPRESS_HTTPS   = false"            >> .env
-    - echo "REDIRECT_DOMAIN = $REDIRECT_DOMAIN" >> .env
-    - echo "SMTP_HOST       = $SMTP_HOST"       >> .env
-    - echo "STMP_PORT       = $STMP_PORT"       >> .env
-    - echo "SMTP_SECURE     = $SMTP_SECURE"     >> .env
-    - echo "SMTP_USERNAME   = $SMTP_USERNAME"   >> .env
-    - echo "SMTP_PWD        = $SMTP_PWD"        >> .env
-    - echo "SMTP_FROM       = $SMTP_FROM"       >> .env
-    - echo "WEBSITE_NAME    = $WEBSITE_NAME"    >> .env
-    # Deploy
-    - echo "====== Setup target server directories ======"
-    - pm2 deploy ecosystem.config.js development setup 2>&1 || true
-    - echo "====== make deploy ======"
+    # Setup Deploy if not exist else update deploy
+    - echo "====== Setup or Update target server directories ======"
+    - ( if [ ! -d "/home/$TARGET_SERVER_USER/myDSI/dev" ]; then pm2 deploy ecosystem.config.js development setup 2>&1 || true; else pm2 deploy ecosystem.config.js development update 2>&1; fi )
+    - echo "====== Make deploy ======"
     - pm2 deploy ecosystem.config.js development
   environment:
     name: staging
