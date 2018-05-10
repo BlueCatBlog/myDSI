@@ -52,7 +52,6 @@ module.exports = {
         ' && pm2 startOrRestart ecosystem.config.js --env development' +
         ' && pm2 save',
       env: {
-        name: 'myDSIdev',
         NODE_ENV: 'development',
         PORT: 3001
       }
