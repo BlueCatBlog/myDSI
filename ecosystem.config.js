@@ -34,7 +34,7 @@ module.exports = {
       path: `${TARGET_SERVER_APP_PATH}/dev`,
       'post-setup': 'rm .env',
       'post-deploy': 'if [ ! -f .env ]' +
-        ` && then echo MONGO_URI_FULL  = ${process.env.MONGO_URI_FULL} > .env` +
+        ` ; then echo MONGO_URI_FULL  = ${process.env.MONGO_URI_FULL} > .env` +
         ` && echo EXPRESS_SECRET  = ${process.env.EXPRESS_SECRET} >> .env` +
         ` && echo EXPRESS_HTTPS   = false >> .env` +
         ` && echo REDIRECT_DOMAIN = ${process.env.REDIRECT_DOMAIN} >> .env` +
@@ -45,7 +45,7 @@ module.exports = {
         ` && echo SMTP_PWD        = ${process.env.SMTP_PWD} >> .env` +
         ` && echo SMTP_FROM       = ${process.env.SMTP_FROM} >> .env` +
         ` && echo WEBSITE_NAME    = ${process.env.WEBSITE_NAME} >> .env` +
-        ' && fi' +
+        ' ; fi' +
         ' && npm install' +
         ' && npm install --prefix client' +
         ' && npm run build --prefix client' +
