@@ -20,11 +20,13 @@ const Base64 = require('js-base64').Base64
 // - Passport
 const passport = require('passport')
 require('./services/Passport')
+console.log(process.env.MONGO_URI_FULL_BASE64)
+console.log(Base64.decode(process.env.MONGO_URI_FULL_BASE64))
 
 // Express Session Config
 const store = new MongoDBStore( // https://github.com/mongodb-js/connect-mongodb-session
   {
-    uri: Base64.decode(process.env.MONGO_URI_FULL_BASE64), // test
+    uri: `${Base64.decode(process.env.MONGO_URI_FULL_BASE64)}`, // test
     collection: 'sessions'
   })
 store.on('error', function (error) {
