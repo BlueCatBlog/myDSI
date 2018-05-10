@@ -6,9 +6,10 @@ const TARGET_SERVER_HOST = process.env.TARGET_SERVER_HOST ? process.env.TARGET_S
 const TARGET_SERVER_PORT = process.env.TARGET_SERVER_PORT ? process.env.TARGET_SERVER_PORT.trim() : 22
 // Your repository
 const REPO = process.env.REPO
-
-// Application Environment Variable
+// Target server application path
 const TARGET_SERVER_APP_PATH = `/home/${TARGET_SERVER_USER}/myDSI`
+
+// Environnement Variables
 
 module.exports = {
   /// / Application configuration section
@@ -40,19 +41,9 @@ module.exports = {
         ' && pm2 startOrRestart ecosystem.config.js --env development' +
         ' && pm2 save',
       env: {
+        name: 'myDSIdev',
         NODE_ENV: 'development',
-        PORT: 3001,
-        MONGO_URI_FULL: process.env.MONGO_URI_FULL,
-        EXPRESS_SECRET: process.env.EXPRESS_SECRET,
-        EXPRESS_HTTPS: false,
-        REDIRECT_DOMAIN: process.env.REDIRECT_DOMAIN,
-        SMTP_HOST: process.env.SMTP_HOST,
-        STMP_PORT: process.env.STMP_PORT,
-        SMTP_SECURE: process.env.SMTP_SECURE,
-        SMTP_USERNAME: process.env.SMTP_USERNAME,
-        SMTP_PWD: process.env.SMTP_PWD,
-        SMTP_FROM: process.env.SMTP_FROM,
-        WEBSITE_NAME: process.env.WEBSITE_NAME
+        PORT: 3001
       }
     }
   }
