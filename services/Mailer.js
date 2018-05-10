@@ -1,4 +1,5 @@
 const yn = require('yn')
+const Base64 = require('js-base64').Base64
 
 // Create reusable transporter object using the default process.env.SMTP transport
 exports.config = {
@@ -7,7 +8,7 @@ exports.config = {
   secure: yn(process.env.SMTP_SECURE), // true for 465, false for other ports
   auth: {
     user: process.env.SMTP_USERNAME,
-    pass: process.env.SMTP_PWD
+    pass: Base64.decode(process.env.SMTP_PWD_BASE64)
   }
 }
 

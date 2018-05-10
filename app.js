@@ -16,6 +16,7 @@ const MongoDBStore = require('connect-mongodb-session')(session)
 // - Module
 const bodyParser = require('body-parser')
 const yn = require('yn')
+const Base64 = require('js-base64').Base64
 // - Passport
 const passport = require('passport')
 require('./services/Passport')
@@ -23,7 +24,7 @@ require('./services/Passport')
 // Express Session Config
 const store = new MongoDBStore( // https://github.com/mongodb-js/connect-mongodb-session
   {
-    uri: process.env.MONGO_URI_FULL, // test
+    uri: Base64.decode(process.env.MONGO_URI_FULL_BASE64), // test
     collection: 'sessions'
   })
 store.on('error', function (error) {
@@ -32,7 +33,7 @@ store.on('error', function (error) {
 })
 app.set('trust proxy', 1) // trust first proxy
 app.use(require('express-session')({ // https://www.npmjs.com/package/express-session
-  secret: process.env.EXPRESS_SECRET,
+  secret: Base64.decode(process.env.EXPRESS_SECRET_BASE64),
   name: 'session',
   store: store,
   resave: false,

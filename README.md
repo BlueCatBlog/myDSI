@@ -5,17 +5,17 @@
 This app needs defined environment variables to work (case sensitive):
 
 * PORT = **number** *Node App will listen to this port*
-* MONGO_URI_FULL   = **string** *MongoDB standard URI: mongodb://[username:password@]host1[:port1][/[][database][?options]]*
-* EXPRESS_SECRET   = **string** *<https://www.npmjs.com/package/express-session>*
-* EXPRESS_HTTPS    = **boolean** *To set if you want to use HTTPS or not, behind a proxy for example*
-* REDIRECT_DOMAIN  = **string** *Server's URI: `http://mydomain.fr`*
-* SMTP_HOST        = **string** *IP or DNS to connect for SMTP purpose: smtp.ethereal.email*
-* SMTP_PORT        = **string** *SMTP port, change boolean if it's a secure port. 25 (no encryption), 465 (SSL), 587 (TLS) for Ethereal*
-* SMTP_SECURE      = **boolean** *For Ehtereal SMTP test, put it to false*
-* SMTP_USERNAME    = **string** *Username or email address use for authentifcation for SMTP*
-* SMTP_PWD         = **string** *Password for SMTP*
-* SMTP_FROM        = **string** *Email address to identify FROM field: '"myDSI" <`notifications@my.dsi`>'*
-* WEBSITE_NAME     = **string** *Name of your website*
+* MONGO_URI_FULL_BASE64 = **string** *Encode Base64 MongoDB standard URI: mongodb://[username:password@]host1[:port1][/[][database][?options]]*
+* EXPRESS_SECRET_BASE64 = **string** *Encode Base64 <https://www.npmjs.com/package/express-session>*
+* EXPRESS_HTTPS         = **boolean** *To set if you want to use HTTPS or not, behind a proxy for example*
+* REDIRECT_DOMAIN       = **string** *Server's URI: `http://mydomain.fr`*
+* SMTP_HOST             = **string** *IP or DNS to connect for SMTP purpose: smtp.ethereal.email*
+* SMTP_PORT             = **string** *SMTP port, change boolean if it's a secure port. 25 (no encryption), 465 (SSL), 587 (TLS) for Ethereal*
+* SMTP_SECURE           = **boolean** *For Ehtereal SMTP test, put it to false*
+* SMTP_USERNAME         = **string** *Username or email address use for authentifcation for SMTP*
+* SMTP_PWD_BASE64       = **string** *Encode Base64 Password for SMTP*
+* SMTP_FROM             = **string** *Email address to identify FROM field: '"myDSI" <`notifications@my.dsi`>'*
+* WEBSITE_NAME          = **string** *Name of your website*
 
 > For more information on MongoDB Connection String:
 > <https://docs.mongodb.com/manual/reference/connection-string/>
