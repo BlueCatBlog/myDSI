@@ -4,8 +4,6 @@ const TARGET_SERVER_USER = process.env.TARGET_SERVER_USER ? process.env.TARGET_S
 const TARGET_SERVER_HOST = process.env.TARGET_SERVER_HOST ? process.env.TARGET_SERVER_HOST.trim() : ''
 // Target server port
 const TARGET_SERVER_PORT = process.env.TARGET_SERVER_PORT ? process.env.TARGET_SERVER_PORT.trim() : 22
-// Target AppName
-const APP_NAME = process.env.APP_NAME ? process.env.APP_NAME.trim() : 'App'
 // Your repository
 const REPO = process.env.REPO
 // Target server application path
@@ -17,7 +15,7 @@ module.exports = {
   /// / Application configuration section
   // http://pm2.keymetrics.io/docs/usage/application-declaration/
   apps: [{
-    name: APP_NAME,
+    name: 'myDSI',
     script: 'app.js'
   }],
 
@@ -34,7 +32,7 @@ module.exports = {
       repo: REPO,
       ssh_options: 'StrictHostKeyChecking=no',
       path: `${TARGET_SERVER_APP_PATH}/dev`,
-      'post-deploy': 'echo MONGO_URI_FULL  = $MONGO_URI_FULL  > .env' +
+      'post-deploy': 'if [ ! -f .env ]; then echo MONGO_URI_FULL  = $MONGO_URI_FULL  > .env' +
         ' && echo EXPRESS_SECRET  = $EXPRESS_SECRET  >> .env' +
         ' && echo EXPRESS_HTTPS   = false            >> .env' +
         ' && echo REDIRECT_DOMAIN = $REDIRECT_DOMAIN >> .env' +
@@ -44,14 +42,14 @@ module.exports = {
         ' && echo SMTP_USERNAME   = $SMTP_USERNAME   >> .env' +
         ' && echo SMTP_PWD        = $SMTP_PWD        >> .env' +
         ' && echo SMTP_FROM       = $SMTP_FROM       >> .env' +
-        ' && echo WEBSITE_NAME    = $WEBSITE_NAME    >> .env' +
+        ' && echo WEBSITE_NAME    = $WEBSITE_NAME    >> .env; fi' +
         ' && npm install' +
         ' && npm install --prefix client' +
         ' && npm run build --prefix client' +
         ' && pm2 startOrRestart ecosystem.config.js --env development' +
         ' && pm2 save',
       env: {
-        name: APP_NAME + 'dev',
+        name: 'myDSIdev',
         NODE_ENV: 'development',
         PORT: 3001
       }
