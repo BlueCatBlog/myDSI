@@ -32,17 +32,20 @@ module.exports = {
       repo: REPO,
       ssh_options: 'StrictHostKeyChecking=no',
       path: `${TARGET_SERVER_APP_PATH}/dev`,
-      'post-deploy': 'echo MONGO_URI_FULL  = $MONGO_URI_FULL; if [ -z ${REPO+x} ]; then echo MONGO_URI_FULL  = $MONGO_URI_FULL  > .env' +
-        ' && echo EXPRESS_SECRET  = $EXPRESS_SECRET  >> .env' +
-        ' && echo EXPRESS_HTTPS   = false            >> .env' +
-        ' && echo REDIRECT_DOMAIN = $REDIRECT_DOMAIN >> .env' +
-        ' && echo SMTP_HOST       = $SMTP_HOST       >> .env' +
-        ' && echo STMP_PORT       = $STMP_PORT       >> .env' +
-        ' && echo SMTP_SECURE     = $SMTP_SECURE     >> .env' +
-        ' && echo SMTP_USERNAME   = $SMTP_USERNAME   >> .env' +
-        ' && echo SMTP_PWD        = $SMTP_PWD        >> .env' +
-        ' && echo SMTP_FROM       = $SMTP_FROM       >> .env' +
-        ' && echo WEBSITE_NAME    = $WEBSITE_NAME    >> .env; fi' +
+      'post-setup': 'rm .env',
+      'post-deploy': 'if [ ! -f .env ]' +
+        ` && then echo MONGO_URI_FULL  = ${process.env.MONGO_URI_FULL} > .env` +
+        ` && echo EXPRESS_SECRET  = ${process.env.EXPRESS_SECRET} >> .env` +
+        ` && echo EXPRESS_HTTPS   = false >> .env` +
+        ` && echo REDIRECT_DOMAIN = ${process.env.REDIRECT_DOMAIN} >> .env` +
+        ` && echo SMTP_HOST       = ${process.env.SMTP_HOST} >> .env` +
+        ` && echo STMP_PORT       = ${process.env.STMP_PORT} >> .env` +
+        ` && echo SMTP_SECURE     = ${process.env.SMTP_SECURE} >> .env` +
+        ` && echo SMTP_USERNAME   = ${process.env.SMTP_USERNAME} >> .env` +
+        ` && echo SMTP_PWD        = ${process.env.SMTP_PWD} >> .env` +
+        ` && echo SMTP_FROM       = ${process.env.SMTP_FROM} >> .env` +
+        ` && echo WEBSITE_NAME    = ${process.env.WEBSITE_NAME} >> .env` +
+        ' && fi' +
         ' && npm install' +
         ' && npm install --prefix client' +
         ' && npm run build --prefix client' +
