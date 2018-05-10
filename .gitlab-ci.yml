@@ -17,16 +17,15 @@ deploy_dev:
     - mkdir ~/.ssh
     - echo $TARGET_SERVER_SECRET_KEY_BASE64 | base64 -d > ~/.ssh/id_rsa
     - chmod 700 ~/.ssh && chmod 600 ~/.ssh/*
-    - echo "====== SSH connection ======"
+    - echo "====== Test ssh connection ======"
     - ssh -o StrictHostKeyChecking=no -T $TARGET_SERVER_USER@$TARGET_SERVER_HOST -p $TARGET_SERVER_PORT
-    # Setup Deploy if not exist else update deploy
-    - echo "====== Setup or Update target server directories ======"
-    - ( if [ ! -d "/home/$TARGET_SERVER_USER/$APP_NAME/dev" ]; then pm2 deploy ecosystem.config.js development setup 2>&1 || true; else pm2 deploy ecosystem.config.js development update 2>&1; fi )
-    - echo "====== Make deploy ======"
+    # Deploy
+    - echo "====== Setup target server directories ======"
+    - pm2 deploy ecosystem.config.js development setup 2>&1 || true
+    - echo "====== make deploy ======"
     - pm2 deploy ecosystem.config.js development
   environment:
     name: staging
     url: $REDIRECT_DOMAIN
   only:
   - dev
-  
