@@ -32,7 +32,7 @@ module.exports = {
       repo: REPO,
       ssh_options: 'StrictHostKeyChecking=no',
       path: `${TARGET_SERVER_APP_PATH}/dev`,
-      'post-deploy': 'if [ ! -f .env ]; then echo MONGO_URI_FULL  = $MONGO_URI_FULL  > .env' +
+      'post-deploy': 'if [ -z ${REPO+x} ]; then echo MONGO_URI_FULL  = $MONGO_URI_FULL  > .env' +
         ' && echo EXPRESS_SECRET  = $EXPRESS_SECRET  >> .env' +
         ' && echo EXPRESS_HTTPS   = false            >> .env' +
         ' && echo REDIRECT_DOMAIN = $REDIRECT_DOMAIN >> .env' +
