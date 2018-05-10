@@ -36,7 +36,7 @@ module.exports = {
       ssh_options: 'StrictHostKeyChecking=no',
       path: `${TARGET_SERVER_APP_PATH}/dev`,
       'pre-setup': `rm -r ${TARGET_SERVER_APP_PATH}/dev -f`,
-      'post-setup': `echo \u{0027}MONGO_URI_FULL_BASE64 = \u{0022}${MONGO_URI_FULL_BASE64}\u{0022}\u{0027} > .env` +
+      'post-setup': `echo \\u{0027}MONGO_URI_FULL_BASE64 = \\u{0022}${MONGO_URI_FULL_BASE64}\\u{0022}\\u{0027} > .env` +
       ` && echo EXPRESS_SECRET_BASE64 = ${EXPRESS_SECRET_BASE64} >> .env` +
       ` && echo EXPRESS_HTTPS = ${process.env.EXPRESS_HTTPS} >> .env` +
       ` && echo REDIRECT_DOMAIN = ${process.env.REDIRECT_DOMAIN} >> .env` +
