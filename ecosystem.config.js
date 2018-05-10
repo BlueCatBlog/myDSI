@@ -10,6 +10,9 @@ const REPO = process.env.REPO
 const TARGET_SERVER_APP_PATH = `/home/${TARGET_SERVER_USER}/myDSI`
 
 // Environnement Variables
+console.log(process.env.MONGO_URI_FULL_BASE64)
+const MONGO_URI_FULL_BASE64 = process.env.MONGO_URI_FULL_BASE64 ? process.env.MONGO_URI_FULL_BASE64.replace(/(RznaWR)/g, '/////////') : 'bG9jYWxob3N0Cg=='
+console.log(MONGO_URI_FULL_BASE64)
 
 module.exports = {
   /// / Application configuration section
@@ -34,7 +37,6 @@ module.exports = {
       path: `${TARGET_SERVER_APP_PATH}/dev`,
       'pre-setup': `rm -r ${TARGET_SERVER_APP_PATH}/dev -f`,
       'post-setup': `echo MONGO_URI_FULL_BASE64 = ${process.env.MONGO_URI_FULL_BASE64} > .env` +
-      ` && echo MONGO_URI_FULL_BASE64_2 = ${(process.env.MONGO_URI_FULL_BASE64).replace(/(RznaWR)/g, '/////////')} >> .env` +
       ` && echo EXPRESS_SECRET_BASE64 = ${process.env.EXPRESS_SECRET_BASE64} >> .env` +
       ` && echo EXPRESS_HTTPS = ${process.env.EXPRESS_HTTPS} >> .env` +
       ` && echo REDIRECT_DOMAIN = ${process.env.REDIRECT_DOMAIN} >> .env` +
