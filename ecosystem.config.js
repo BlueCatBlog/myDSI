@@ -32,7 +32,7 @@ module.exports = {
       repo: REPO,
       ssh_options: 'StrictHostKeyChecking=no',
       path: `${TARGET_SERVER_APP_PATH}/dev`,
-      'post-setup': 'rm .env',
+      'pre-setup': `rm -r ${TARGET_SERVER_APP_PATH}/dev -f`,
       'post-deploy': 'if [ ! -f .env ]' +
         ` ; then echo MONGO_URI_FULL  = ${process.env.MONGO_URI_FULL} > .env` +
         ` && echo EXPRESS_SECRET  = ${process.env.EXPRESS_SECRET} >> .env` +
