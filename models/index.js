@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const Base64 = require('js-base64').Base64
 
 // Mongoose config
-mongoose.connect(Base64.decode(process.env.MONGO_URI_FULL))
+mongoose.connect(Base64.decode(process.env.MONGO_URI_FULL_BASE64))
   .then(
     () => {},
     (err) => {
