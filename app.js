@@ -1,8 +1,3 @@
-console.log('ENV')
-console.log(process.env)
-console.log('MONGO_URI_FULL')
-console.log(process.env.MONGO_URI_FULL)
-
 // Environment Variable
 require('dotenv').config()
 // Requirements
