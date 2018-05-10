@@ -9,10 +9,10 @@ const REPO = process.env.REPO
 // Target server application path
 const TARGET_SERVER_APP_PATH = `/home/${TARGET_SERVER_USER}/myDSI`
 
-// Probable environment variable with multiline
-const MONGO_URI_FULL_BASE64 = process.env.MONGO_URI_FULL_BASE64 ? process.env.MONGO_URI_FULL_BASE64.replace(/\n/g, '\\n') : ''
-const EXPRESS_SECRET_BASE64 = process.env.EXPRESS_SECRET_BASE64 ? process.env.EXPRESS_SECRET_BASE64.replace(/\n/g, '\\n') : ''
-const SMTP_PWD_BASE64 = process.env.SMTP_PWD_BASE64 ? process.env.SMTP_PWD_BASE64.replace(/\n/g, '\\n') : ''
+// Probable environment variable with multiline for .env
+const MONGO_URI_FULL_BASE64 = process.env.MONGO_URI_FULL_BASE64 ? process.env.MONGO_URI_FULL_BASE64.replace(/\n/g, '\\\\n') : ''
+const EXPRESS_SECRET_BASE64 = process.env.EXPRESS_SECRET_BASE64 ? process.env.EXPRESS_SECRET_BASE64.replace(/\n/g, '\\\\n') : ''
+const SMTP_PWD_BASE64 = process.env.SMTP_PWD_BASE64 ? process.env.SMTP_PWD_BASE64.replace(/\n/g, '\\\\n') : ''
 
 module.exports = {
   /// / Application configuration section
