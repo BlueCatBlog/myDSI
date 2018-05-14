@@ -3,7 +3,7 @@
 ## Set Environment (process.env)
 
 This app needs defined environment variables to work (case sensitive):
-> Be aware some variable are Base64 encoded and may be mutiline.
+> Be aware some variable are Base64 encoded and may be mutiline. Avoid multiline with PM2 deployement, double quotes are not really supported because ecosystem.js hostJSON is parsed before deployement.
 > New lines are expanded if in double quotes (MULTILINE="new\nline").
 > See .env doc:
 > <https://github.com/motdotla/dotenv#rules>
@@ -150,3 +150,15 @@ You can set .env as follow:
 
     PORT        = 3000
     MONGO_URI   = 'mongodb://userApp:auserAppPassword@localhost/mydsi?ssl=true&connectTimeoutMS=30000'
+
+## Useful command
+
+### Encoding & Decoding Base64
+
+    $Text = ‘This is a secret and should be hidden’
+    $Bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
+    $EncodedText =[Convert]::ToBase64String($Bytes)
+    $EncodedText
+
+> Source
+> <https://adsecurity.org/?p=478>
