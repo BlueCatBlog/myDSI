@@ -101,7 +101,6 @@ exports.invitUser = (req, res) => {
 
         // send mail with defined transport object
         transporter.sendMail(mailOptions, err => res.status(422).json(err.message))
-          .catch(err => res.status(422).json(err.message))
       }
       res.status(200).json(msg.forgotUserPassword)
     }, err => res.status(400).json(err.message))
