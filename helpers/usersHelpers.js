@@ -4,6 +4,7 @@ const msg = require('../services/Messages')
 const crypto = require('crypto')
 const nodemailer = require('nodemailer')
 const { config: nMailerCfg, mailTemplate } = require('../services/Mailer')
+const website = process.env.PORT ? `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}` : process.env.REDIRECT_DOMAIN
 
 // Read All Users
 exports.getUsers = (req, res) => {
@@ -19,14 +20,14 @@ exports.createUser = (req, res) => {
     if (err) {
       res.status(400).json(err.message)
     } else {
-      const website = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/enable/${createdUser.enableToken}`
+      const link = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/enable/${createdUser.enableToken}`
       // Basic information for simple email template
       const body = {
         hello: `Hello ${createdUser.username}`,
         intro: `Thank you to register on ${process.env.WEBSITE_NAME} enable your account to start using it:`,
-        link: website,
+        link: link,
         action: 'Enable account',
-        complement: `If the button doesn't work, go to: <a href=${website}>${website}</a> (it will expire at ${createdUser.enableExpires})`,
+        complement: `If the button doesn't work, go to: <a href=${link}>${link}</a> (it will expire at ${createdUser.enableExpires})`,
         regards: 'Best regards,',
         signature: 'IT Team'
       }
@@ -43,9 +44,8 @@ exports.createUser = (req, res) => {
 
       // send mail with defined transport object
       transporter.sendMail(mailOptions)
+        .then(() => res.status(201).json({id: createdUser.id, username: createdUser.username, enableToken: createdUser.enableToken}))
         .catch(err => res.status(422).json(err.message))
-
-      res.status(201).json({id: createdUser.id, username: createdUser.username, enableToken: createdUser.enableToken})
     }
   })
 }
@@ -60,8 +60,8 @@ exports.enableUser = (req, res) => {
           foundUser.enableExpires = undefined
           foundUser.active = true
           foundUser.save()
+            .then(() => res.status(200).json(msg.enableUser))
             .catch(err => res.status(422).json(err.message))
-          res.status(200).json(msg.enableUser)
         } else {
           throw res.status(400).json(msg.expiredToken)
         }
@@ -76,35 +76,33 @@ exports.enableUser = (req, res) => {
 exports.invitUser = (req, res) => {
   db.User.create({invitation: true, ...req.body})
     .then(invitedUser => {
-      {
-        const website = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/invitation/${invitedUser.enableToken}`
-        // Basic information for simple email template
-        const body = {
-          hello: `Hello ${invitedUser.username}`,
-          intro: `You have been invited on ${process.env.WEBSITE_NAME}, just set your password and login:`,
-          link: website,
-          action: 'Set my password',
-          complement: `If the button doesn't work, go to: <a href=${website}>${website}</a> (it will expire at ${invitedUser.enableExpires})`,
-          regards: 'Best regards,',
-          signature: 'IT Team'
-        }
+      const link = `${website}/users/invitation/${invitedUser.enableToken}`
 
-        // create reusable transporter object using the default SMTP transport
-        const transporter = nodemailer.createTransport(nMailerCfg)
-        // setup email data with unicode symbols
-        const mailOptions = {
-          from: process.env.SMTP_FROM, // sender address
-          to: invitedUser.email, // list of receivers
-          subject: `Invitation to use ${process.env.WEBSITE_NAME}`, // Subject line
-          html: mailTemplate(body) // html body
-        }
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions, (err, info) => {
-          if (err) { res.status(422).json(err.message) } else { console.log(`Message sent: ${info.response}`) }
-        })
+      // Basic information for simple email template
+      const body = {
+        hello: `Hello ${invitedUser.username}`,
+        intro: `You have been invited on ${process.env.WEBSITE_NAME}, just set your password and login:`,
+        link: link,
+        action: 'Set my password',
+        complement: `If the button doesn't work, go to: <a href=${link}>${link}</a> (it will expire at ${invitedUser.enableExpires})`,
+        regards: 'Best regards,',
+        signature: 'IT Team'
       }
-      res.status(200).json(msg.forgotUserPassword)
+
+      // create reusable transporter object using the default SMTP transport
+      const transporter = nodemailer.createTransport(nMailerCfg)
+      // setup email data with unicode symbols
+      const mailOptions = {
+        from: process.env.SMTP_FROM, // sender address
+        to: invitedUser.email, // list of receivers
+        subject: `Invitation to use ${process.env.WEBSITE_NAME}`, // Subject line
+        html: mailTemplate(body) // html body
+      }
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions)
+        .then(() => res.status(200).json(msg.forgotUserPassword))
+        .catch(err => res.status(422).json(err.message))
     }, err => res.status(400).json(err.message))
     .catch(err => res.status(422).json(err.message))
 }
@@ -125,8 +123,8 @@ exports.invitEnableUser = (req, res) => {
               updatedUser.username = req.body.username
               updatedUser.email = req.body.email
               updatedUser.save()
+                .then(() => res.status(200).json(msg.enableUser))
                 .catch(err => res.status(422).json(err.message))
-              res.status(200).json(msg.enableUser)
             }
           })
         } else {
@@ -169,13 +167,9 @@ exports.changeUserPassword = (req, res) => {
   db.User.findById(req.params.id)
     .then(foundUser => {
       if (foundUser) {
-        foundUser.changePassword(req.body.oldPassword, req.body.newPassword, (err, updatedUser) => {
-          if (err) {
-            res.status(400).json(err.message)
-          } else {
-            res.status(200).json(msg.changeUserPassword)
-          }
-        })
+        foundUser.changePassword(req.body.oldPassword, req.body.newPassword)
+          .then(() => res.status(200).json(msg.changeUserPassword))
+          .catch(err => res.status(400).json(err.message))
       } else {
         res.status(400).json(msg.notFoundUserId)
       }
@@ -191,42 +185,39 @@ exports.forgotUserPassword = (req, res) => {
         foundUser.resetPasswordToken = crypto.randomBytes(48).toString('hex')
         foundUser.resetPasswordExpires = Date.now() + 60 * 60 * 1000 // 1 hour
         foundUser.save()
+          .then(() => { return foundUser })
           .catch(err => res.status(422).json(err.message))
-
-        return foundUser
       } else {
         throw res.status(400).json(msg.notFoundUserEmail)
       }
     }, err => res.status(400).json(err.message))
     .then(foundUser => {
-      {
-        const website = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/pwd/reset/${foundUser.resetPasswordToken}`
-        // Basic information for simple email template
-        const body = {
-          hello: `Hello ${foundUser.username}`,
-          intro: 'Forgot your password? Reset it below:',
-          link: website,
-          action: 'Reset password',
-          complement: `If the button doesn't work, go to: <a href=${website}>${website}</a> (it will expire at ${foundUser.resetPasswordExpires})`,
-          regards: 'Best regards,',
-          signature: 'IT Team'
-        }
-
-        // create reusable transporter object using the default SMTP transport
-        const transporter = nodemailer.createTransport(nMailerCfg)
-        // setup email data with unicode symbols
-        const mailOptions = {
-          from: process.env.SMTP_FROM, // sender address
-          to: foundUser.email, // list of receivers
-          subject: 'Forgot password', // Subject line
-          html: mailTemplate(body) // html body
-        }
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions)
-          .catch(err => res.status(422).json(err.message))
+      const link = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/pwd/reset/${foundUser.resetPasswordToken}`
+      // Basic information for simple email template
+      const body = {
+        hello: `Hello ${foundUser.username}`,
+        intro: 'Forgot your password? Reset it below:',
+        link: link,
+        action: 'Reset password',
+        complement: `If the button doesn't work, go to: <a href=${link}>${link}</a> (it will expire at ${foundUser.resetPasswordExpires})`,
+        regards: 'Best regards,',
+        signature: 'IT Team'
       }
-      res.status(200).json(msg.forgotUserPassword)
+
+      // create reusable transporter object using the default SMTP transport
+      const transporter = nodemailer.createTransport(nMailerCfg)
+      // setup email data with unicode symbols
+      const mailOptions = {
+        from: process.env.SMTP_FROM, // sender address
+        to: foundUser.email, // list of receivers
+        subject: 'Forgot password', // Subject line
+        html: mailTemplate(body) // html body
+      }
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions)
+        .then(() => res.status(200).json(msg.forgotUserPassword))
+        .catch(err => res.status(422).json(err.message))
     }, err => res.status(400).json(err.message))
     .catch(err => res.status(400).json(err.message))
 }
@@ -253,41 +244,38 @@ exports.resetUserPassword = (req, res) => {
           updatedUser.resetPasswordToken = undefined
           updatedUser.resetPasswordExpires = undefined
           updatedUser.save()
+            .then(() => { return foundUser })
             .catch(err => res.status(422).json(err.message))
         }
       })
-      return foundUser
     }, err => res.status(400).json(err.message))
     .then(foundUser => {
-      {
-        console.log(foundUser)
-        const website = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/pwd/forgot/`
-        // Basic information for simple email template
-        const body = {
-          hello: `Hello ${foundUser.username}`,
-          intro: 'Your password has been changed, reset it if it\'s not your doing :',
-          link: website,
-          action: 'Ask a new password',
-          complement: `If the button doesn't work, go to: <a href=${website}>${website}</a>`,
-          regards: 'Best regards,',
-          signature: 'IT Team'
-        }
-
-        // create reusable transporter object using the default SMTP transport
-        const transporter = nodemailer.createTransport(nMailerCfg)
-        // setup email data with unicode symbols
-        const mailOptions = {
-          from: '"myDSI" <notifications@my.dsi>', // sender address
-          to: foundUser.email, // list of receivers
-          subject: 'Password changed', // Subject line
-          html: mailTemplate(body) // html body
-        }
-
-        // send mail with defined transport object
-        transporter.sendMail(mailOptions)
-          .catch(err => res.status(422).json(err.message))
+      const link = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/pwd/forgot/`
+      // Basic information for simple email template
+      const body = {
+        hello: `Hello ${foundUser.username}`,
+        intro: 'Your password has been changed, reset it if it\'s not your doing :',
+        link: link,
+        action: 'Ask a new password',
+        complement: `If the button doesn't work, go to: <a href=${link}>${link}</a>`,
+        regards: 'Best regards,',
+        signature: 'IT Team'
       }
-      res.status(200).json(msg.resetUserPassword)
+
+      // create reusable transporter object using the default SMTP transport
+      const transporter = nodemailer.createTransport(nMailerCfg)
+      // setup email data with unicode symbols
+      const mailOptions = {
+        from: '"myDSI" <notifications@my.dsi>', // sender address
+        to: foundUser.email, // list of receivers
+        subject: 'Password changed', // Subject line
+        html: mailTemplate(body) // html body
+      }
+
+      // send mail with defined transport object
+      transporter.sendMail(mailOptions)
+        .then(() => res.status(200).json(msg.resetUserPassword))
+        .catch(err => res.status(422).json(err.message))
     }, err => res.status(400).json(err.message))
     .catch(err => res.status(400).json(err.message))
 }
