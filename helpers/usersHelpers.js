@@ -20,7 +20,7 @@ exports.createUser = (req, res) => {
     if (err) {
       res.status(400).json(err.message)
     } else {
-      const link = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/enable/${createdUser.enableToken}`
+      const link = `${website}/users/enable/${createdUser.enableToken}`
       // Basic information for simple email template
       const body = {
         hello: `Hello ${createdUser.username}`,
@@ -192,7 +192,7 @@ exports.forgotUserPassword = (req, res) => {
       }
     }, err => res.status(400).json(err.message))
     .then(foundUser => {
-      const link = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/pwd/reset/${foundUser.resetPasswordToken}`
+      const link = `${website}/users/pwd/reset/${foundUser.resetPasswordToken}`
       // Basic information for simple email template
       const body = {
         hello: `Hello ${foundUser.username}`,
@@ -250,7 +250,7 @@ exports.resetUserPassword = (req, res) => {
       })
     }, err => res.status(400).json(err.message))
     .then(foundUser => {
-      const link = `${process.env.REDIRECT_DOMAIN}:${process.env.PORT}/users/pwd/forgot/`
+      const link = `${website}/users/pwd/forgot/`
       // Basic information for simple email template
       const body = {
         hello: `Hello ${foundUser.username}`,
