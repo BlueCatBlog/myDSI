@@ -68,6 +68,7 @@ app.get('/', function (req, res) {
 })
 
 // App Listen
+const IP = process.env.IP ? process.env.IP : 'localhost'
 if (yn(process.env.EXPRESS_HTTPS)) {
   const httpsOpt = { // https://nodejs.org/docs/latest-v8.x/api/https.html#https_https_createserver_options_requestlistener
     // Self-Signed Certificate
@@ -77,8 +78,8 @@ if (yn(process.env.EXPRESS_HTTPS)) {
   }
   https.createServer(httpsOpt, app) // http://expressjs.com/en/api.html#app.listen
     .listen(port, function () {
-      console.log(`APP IS RUNNING ON PORT https://${process.env.IP}:${process.env.PORT}`)
+      console.log(`APP IS RUNNING ON PORT https://${IP}:${process.env.PORT}`)
     })
 } else {
-  app.listen(port, () => console.log(`APP IS RUNNING AT http://${process.env.IP}:${process.env.PORT}`))
+  app.listen(port, () => console.log(`APP IS RUNNING AT http://${IP}:${process.env.PORT}`))
 }
