@@ -182,7 +182,7 @@ exports.forgotUserPassword = (req, res) => {
   db.User.findOne({email: req.body.email})
     .then(foundUser => {
       if (foundUser) {
-        foundUser.resetPasswordToken = crypto.randomBytes(48).toString('hex')
+        foundUser.resetPasswordToken = crypto.randomBytes(12).toString('hex')
         foundUser.resetPasswordExpires = Date.now() + 60 * 60 * 1000 // 1 hour
         foundUser.save()
           .then(() => { return foundUser })
