@@ -155,16 +155,6 @@ You can set .env as follow:
 
 ### Encoding & Decoding Base64
 
-#### PowerShell
-
-    $Text = 'This is a secret and should be hidden'
-    $Bytes = [System.Text.Encoding]::Unicode.GetBytes($Text)
-    $EncodedText =[Convert]::ToBase64String($Bytes)
-    $EncodedText
-
-> Source:
-> <https://adsecurity.org/?p=478>
-
 #### Linux
 
     echo 'This is a secret and should be hidden' | base64 -w 0

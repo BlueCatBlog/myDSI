@@ -66,7 +66,7 @@ exports.enableUser = (req, res) => {
           throw res.status(400).json(msg.expiredToken)
         }
       } else {
-        res.status(400).json(msg.notFoundUserToken)
+        throw res.status(400).json(msg.notFoundUserToken)
       }
     }, err => res.status(400).json(err.message))
     .catch(err => res.status(400).json(err.message))
@@ -100,7 +100,7 @@ exports.invitUser = (req, res) => {
         }
 
         // send mail with defined transport object
-        transporter.sendMail(mailOptions)
+        transporter.sendMail(mailOptions, err => res.status(422).json(err.message))
           .catch(err => res.status(422).json(err.message))
       }
       res.status(200).json(msg.forgotUserPassword)
