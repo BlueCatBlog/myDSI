@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   invitation: Boolean,
-  enableToken: { type: String, default: crypto.randomBytes(48).toString('hex') },
+  enableToken: { type: String, default: crypto.randomBytes(12).toString('hex') },
   enableExpires: { type: Date, default: Date.now() + 24 * 60 * 60 * 1000 }, // 1 Day
   active: { type: Boolean, default: false }
 })
