@@ -64,7 +64,7 @@ app.use(passport.session())
 app.get('/health-check', (req, res) => res.sendStatus(200))
 app.use('/api/users', require('./routes/usersRoutes'))
 app.get('/*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
+  res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
 })
 
 // App Listen
