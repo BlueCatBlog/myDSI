@@ -63,7 +63,7 @@ app.use(passport.session())
 // App Routes
 app.get('/health-check', (req, res) => res.sendStatus(200))
 app.use('/api/users', require('./routes/usersRoutes'))
-app.get('/', function (req, res) {
+app.get('/*', function (req, res) {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'))
 })
 
