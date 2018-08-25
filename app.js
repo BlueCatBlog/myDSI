@@ -64,9 +64,6 @@ app.use(passport.session())
 app.get('/health-check', (req, res) => res.sendStatus(200))
 app.use('/api/users', require('./routes/usersRoutes'))
 app.get('/*', express.static(path.join(__dirname, 'client', 'build')))
-// app.get('/*', function (req, res) {
-//   res.sendFile(path.resolve(__dirname, './client/build', 'index.html'))
-// })
 
 // App Listen
 const IP = process.env.IP ? process.env.IP : 'localhost'
